@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Nitronet | Web OS</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; }
+        .box { border: 1px solid #333; padding: 20px; margin: 20px; border-radius: 10px; }
+        input, button { padding: 10px; margin: 10px; border-radius: 5px; border: none; }
+        button { background: #007bff; color: white; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Nitronet</h1>
+    
+    <div class="box">
+        <h3>Upload Your Website</h3>
+        <input type="text" id="username" placeholder="Your Username">
+        <input type="file" id="folderInput" webkitdirectory directory multiple>
+        <button onclick="uploadSite()">Deploy Website</button>
+    </div>
+
+    <div class="box">
+        <h3>Browse the Web (Proxy)</h3>
+        <input type="text" id="proxyUrl" placeholder="https://example.com">
+        <button onclick="browse()">Go</button>
+    </div>
+
+    <script>
+        async function uploadSite() {
+            const files = document.getElementById('folderInput').files;
+            const username = document.getElementById('username').value;
+            const formData = new FormData();
+            formData.append('username', username);
+            for (let file of files) formData.append('files', file);
+
+            await fetch('/upload', { method: 'POST', body: formData });
+            alert("Site Live at: " + window.location.origin + "/sites/" + username);
+        }
+
+        function browse() {
+            const url = document.getElementById('proxyUrl').value;
+            window.location.href = `/proxy?url=${url}`;
+        }
+    </script>
+</body>
+</html>
